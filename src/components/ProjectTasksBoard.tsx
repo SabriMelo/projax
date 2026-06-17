@@ -363,11 +363,11 @@ export default function ProjectTasksBoard() {
 
             {/* Project header */}
             <div className="px-4 pt-3">
-              <p className="text-[10px] font-medium uppercase tracking-wide text-neutral-500">PROJ-001</p>
+              <p className="text-[10px] font-medium uppercase tracking-wide text-neutral-600">PROJ-001</p>
               {/* Decorative app title — a <p>, not a heading, to keep the page's
                   heading order intact */}
               <p className="font-serif text-lg leading-tight text-ink">Beatriz e João</p>
-              <p className="text-[11px] text-neutral-500">Studio B2</p>
+              <p className="text-[11px] text-neutral-600">Studio B2</p>
 
               {/* Tabs */}
               <div className="mt-2.5 flex gap-4 border-b border-black/5 text-[11px]">
@@ -377,7 +377,7 @@ export default function ProjectTasksBoard() {
                     <span
                       key={tab}
                       className={`-mb-px border-b-2 pb-1.5 ${
-                        active ? "border-clay font-medium text-ink" : "border-transparent text-neutral-500"
+                        active ? "border-clay font-medium text-ink" : "border-transparent text-neutral-600"
                       }`}
                     >
                       {tab}
@@ -388,7 +388,7 @@ export default function ProjectTasksBoard() {
 
               {/* Count + new */}
               <div className="mt-3 flex items-center justify-between">
-                <span className="text-[11px] text-neutral-500">4 tarefas</span>
+                <span className="text-[11px] text-neutral-600">4 tarefas</span>
                 <span className="inline-flex items-center gap-1 rounded-lg bg-clay px-2.5 py-1 text-[11px] font-medium text-white">
                   <Plus size={11} weight="bold" />
                   Nova Tarefa
