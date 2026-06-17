@@ -114,9 +114,11 @@ export default function Hero() {
             <br />
             do briefing à entrega.
           </h1>
-          <p className="hero-rv mb-8 max-w-md text-lg text-neutral-300">
-            Projetos, obras, financeiro e equipe em um só lugar. O Projax cuida
-            da gestão do escritório para você focar no que importa: projetar.
+          <p className="hero-rv mb-8 max-w-md text-pretty text-lg text-neutral-300">
+            Projetos, obras, financeiro e equipe em um só lugar.
+            <br />
+            O Projax cuida da gestão do escritório para você focar no que
+            importa: projetar.
           </p>
 
           <div className="hero-rv flex flex-col gap-3 sm:flex-row">

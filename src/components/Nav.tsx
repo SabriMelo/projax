@@ -1,21 +1,28 @@
 import { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { ArrowRight, List, X } from "@phosphor-icons/react";
 
 const links = [
-  { href: "#recursos", label: "Recursos" },
-  { href: "#como", label: "Como funciona" },
-  { href: "#precos", label: "Preços" },
-  { href: "#faq", label: "FAQ" },
+  { id: "recursos", label: "Recursos" },
+  { id: "como", label: "Como funciona" },
+  { id: "precos", label: "Preços" },
+  { id: "faq", label: "FAQ" },
 ];
 
 export default function Nav() {
   const [open, setOpen] = useState(false);
+  const { pathname } = useLocation();
+
+  // In-page hash on the landing; full path + hash elsewhere so it lands on the
+  // right section after navigating home.
+  const sectionHref = (id: string) =>
+    pathname === "/" ? `#${id}` : `/#${id}`;
 
   return (
     <nav className="fixed inset-x-0 top-0 z-50 w-full border-b border-white/10 bg-gradient-to-r from-ink/85 via-[#2a1209]/82 to-ink/85 px-6 py-4 backdrop-blur-md md:px-10 lg:px-16">
       <div className="mx-auto flex max-w-[1800px] items-center justify-between md:grid md:grid-cols-[1fr_auto_1fr]">
         {/* Logo — accent colour, prominent */}
-        <a href="#hero" className="flex items-center gap-2 text-clay-soft md:justify-self-start">
+        <Link to="/" className="flex items-center gap-2 text-clay-soft md:justify-self-start">
           <svg
             viewBox="798 483 760 1250"
             className="h-9 w-auto"
@@ -27,14 +34,14 @@ export default function Nav() {
           <span className="font-tera text-sm font-light tracking-tight text-clay-soft">
             PROJAX
           </span>
-        </a>
+        </Link>
 
         {/* Desktop links — centred, white, a touch heavier */}
         <div className="hidden items-center gap-8 md:flex md:justify-self-center">
           {links.map((l) => (
             <a
-              key={l.href}
-              href={l.href}
+              key={l.id}
+              href={sectionHref(l.id)}
               className="text-sm font-medium text-white/85 transition-colors hover:text-white"
             >
               {l.label}
@@ -44,7 +51,7 @@ export default function Nav() {
 
         {/* CTA */}
         <a
-          href="#precos"
+          href={sectionHref("precos")}
           className="grad-border grad-border-clay-solid hidden items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-medium text-white transition-transform duration-300 hover:-translate-y-0.5 md:inline-flex md:justify-self-end"
         >
           Teste grátis
@@ -73,8 +80,8 @@ export default function Nav() {
           <div className="mt-4 flex flex-col gap-1 border-t border-white/10 pt-4">
             {links.map((l) => (
               <a
-                key={l.href}
-                href={l.href}
+                key={l.id}
+                href={sectionHref(l.id)}
                 onClick={() => setOpen(false)}
                 className="rounded-lg px-2 py-2.5 text-sm font-medium text-white/85 transition-colors hover:bg-white/10 hover:text-white"
               >
@@ -82,7 +89,7 @@ export default function Nav() {
               </a>
             ))}
             <a
-              href="#precos"
+              href={sectionHref("precos")}
               onClick={() => setOpen(false)}
               className="grad-border grad-border-clay-solid mt-2 inline-flex items-center justify-center gap-1.5 rounded-lg px-4 py-2.5 text-sm font-medium text-white"
             >

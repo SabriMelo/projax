@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import { Check } from "@phosphor-icons/react";
+import { gsap, useGSAP } from "../lib/gsap";
 
 type Plan = {
   name: string;
@@ -86,9 +87,48 @@ const PLANS: Plan[] = [
 
 export default function Pricing() {
   const [billing, setBilling] = useState<"mensal" | "anual">("mensal");
+  const rootRef = useRef<HTMLElement>(null);
+  const numRefs = useRef<Record<string, HTMLSpanElement | null>>({});
+  const lineRefs = useRef<Record<string, HTMLSpanElement | null>>({});
+  const first = useRef(true);
+
+  // When billing flips: strike the old value with an accent line, then swipe
+  // the new value in from the right. Always eased.
+  useGSAP(
+    () => {
+      PLANS.forEach((plan) => {
+        if (plan.custom) return;
+        const num = numRefs.current[plan.name];
+        const line = lineRefs.current[plan.name];
+        if (!num || !line) return;
+        const newVal = `R$${billing === "anual" ? plan.annual : plan.monthly}`;
+        if (first.current) {
+          num.textContent = newVal;
+          return;
+        }
+        gsap
+          .timeline()
+          .set(line, { scaleX: 0, opacity: 1, transformOrigin: "left center" })
+          .to(line, { scaleX: 1, duration: 0.22, ease: "power2.inOut" })
+          .to(num, { xPercent: -45, opacity: 0, duration: 0.2, ease: "power2.in" }, 0.12)
+          .add(() => {
+            num.textContent = newVal;
+          })
+          .set(line, { opacity: 0 })
+          .fromTo(
+            num,
+            { xPercent: 45, opacity: 0 },
+            { xPercent: 0, opacity: 1, duration: 0.34, ease: "power3.out" },
+          );
+      });
+      first.current = false;
+    },
+    { dependencies: [billing], scope: rootRef },
+  );
 
   return (
     <section
+      ref={rootRef}
       id="precos"
       className="tech-grid border-y border-dashed border-clay/15 bg-white px-6 py-14 md:px-10 md:py-20 lg:px-16"
     >
@@ -145,12 +185,12 @@ export default function Pricing() {
         </div>
 
         {/* Plans — horizontal carousel on mobile, grid on desktop */}
-        <div className="mt-12 flex snap-x snap-mandatory gap-5 overflow-x-auto -mx-6 px-6 pb-4 pt-3 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:grid md:grid-cols-2 md:overflow-visible md:px-0 md:pb-0 md:pt-0 lg:grid-cols-4">
+        <div className="group mt-12 flex snap-x snap-mandatory gap-5 overflow-x-auto -mx-6 px-6 pb-4 pt-3 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:grid md:grid-cols-2 md:overflow-visible md:px-0 md:pb-0 md:pt-0 lg:grid-cols-4">
           {PLANS.map((plan) => (
             <div
               key={plan.name}
               data-reveal
-              className={`relative flex min-w-[80%] shrink-0 snap-center flex-col rounded-2xl p-6 sm:min-w-[46%] md:min-w-0 md:shrink ${
+              className={`relative flex min-w-[80%] shrink-0 snap-center flex-col rounded-2xl p-6 transition-all duration-300 ease-out hover:-translate-y-1 sm:min-w-[46%] md:min-w-0 md:shrink md:group-hover:[&:not(:hover)]:opacity-60 ${
                 plan.popular ? "grad-border grad-border-clay" : "grad-border"
               }`}
             >
@@ -172,8 +212,24 @@ export default function Pricing() {
                   <span className="text-3xl">{plan.custom}</span>
                 ) : (
                   <>
-                    R${billing === "anual" ? plan.annual : plan.monthly}
-                    <span className="text-base text-neutral-400">/mês</span>
+                    <span className="relative inline-block align-baseline">
+                      <span
+                        ref={(el) => {
+                          numRefs.current[plan.name] = el;
+                        }}
+                        className="inline-block"
+                      >
+                        R${plan.monthly}
+                      </span>
+                      <span
+                        ref={(el) => {
+                          lineRefs.current[plan.name] = el;
+                        }}
+                        aria-hidden
+                        className="pointer-events-none absolute left-0 top-1/2 -mt-[1.5px] h-[3px] w-full origin-left scale-x-0 rounded-full bg-clay"
+                      />
+                    </span>
+                    <span className="text-base text-neutral-500">/mês</span>
                   </>
                 )}
               </p>

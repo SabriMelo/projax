@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Bell,
   CalendarBlank,
@@ -103,6 +103,51 @@ export default function ProjectTasksBoard() {
   const countRefs = useRef<Record<string, HTMLSpanElement | null>>({});
   const cardRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
+  // Easter egg on the notification bell
+  const [egg, setEgg] = useState(false);
+  const bellRef = useRef<HTMLButtonElement>(null);
+  const eggTimer = useRef<number | undefined>(undefined);
+
+  const popEgg = () => {
+    setEgg(true);
+    const el = bellRef.current;
+    if (el) {
+      gsap.fromTo(
+        el,
+        { rotation: -16 },
+        {
+          rotation: 16,
+          duration: 0.07,
+          repeat: 9,
+          yoyo: true,
+          ease: "sine.inOut",
+          transformOrigin: "50% 0%",
+          onComplete: () => gsap.to(el, { rotation: 0, duration: 0.12 }),
+        },
+      );
+      gsap.fromTo(
+        el,
+        { color: "#000fdd" },
+        {
+          color: "#a3a3a3",
+          duration: 0.16,
+          repeat: 5,
+          yoyo: true,
+          onComplete: () => gsap.set(el, { clearProps: "color" }),
+        },
+      );
+    }
+    if (eggTimer.current) window.clearTimeout(eggTimer.current);
+    eggTimer.current = window.setTimeout(() => setEgg(false), 3800);
+  };
+
+  useEffect(
+    () => () => {
+      if (eggTimer.current) window.clearTimeout(eggTimer.current);
+    },
+    [],
+  );
+
   useGSAP(
     () => {
       const board = boardRef.current;
@@ -114,12 +159,13 @@ export default function ProjectTasksBoard() {
       let H = 0;
       let bRect = board.getBoundingClientRect();
       const measure = () => {
-        cardW = firstDrop.getBoundingClientRect().width;
+        // offsetWidth/Height are layout sizes (ignore any transient drag scale)
+        cardW = firstDrop.offsetWidth;
         TASKS.forEach((t) => {
           const c = cardRefs.current[t.id];
           if (c) gsap.set(c, { width: cardW });
         });
-        H = cardRefs.current["t1"]!.getBoundingClientRect().height;
+        H = cardRefs.current["t1"]!.offsetHeight;
         // Size every column's drop zone to hold all four cards stacked.
         const dropH = 4 * H + 3 * GAP;
         COLUMNS.forEach((c) => {
@@ -169,10 +215,15 @@ export default function ProjectTasksBoard() {
       // --- Drag interaction (enabled once the intro settles) ---
       const drags: Draggable[] = [];
 
-      // Re-measure and re-seat every card when the window resizes, so the board
-      // adapts subtly as it's compressed or expanded.
+      // Re-measure and re-seat every card when the window WIDTH changes, so the
+      // board adapts as it's compressed or expanded. We ignore height-only
+      // changes (mobile address-bar show/hide while scrolling) — those used to
+      // shove the cards around and make them vanish.
       let raf = 0;
+      let lastW = window.innerWidth;
       const onResize = () => {
+        if (window.innerWidth === lastW) return;
+        lastW = window.innerWidth;
         if (raf) return;
         raf = requestAnimationFrame(() => {
           raf = 0;
@@ -350,14 +401,30 @@ export default function ProjectTasksBoard() {
           {/* Main */}
           <div className="min-w-0 flex-1 bg-[#faf8f4]">
             {/* Top bar */}
-            <div className="flex items-center justify-between border-b border-black/5 bg-white px-3 py-2 sm:px-4 sm:py-2.5">
+            <div className="relative flex items-center justify-between border-b border-black/5 bg-white px-3 py-2 sm:px-4 sm:py-2.5">
               <span className="text-xs font-semibold text-ink sm:text-[13px]">Tarefas do Projeto</span>
               <div className="flex items-center gap-3 text-neutral-400">
                 <Lightbulb size={15} />
-                <span className="relative">
+                <button
+                  ref={bellRef}
+                  type="button"
+                  onClick={popEgg}
+                  aria-label="Notificações"
+                  className="relative cursor-pointer outline-none"
+                >
                   <Bell size={15} />
                   <span className="absolute -right-0.5 -top-0.5 h-1.5 w-1.5 rounded-full bg-red-500" />
-                </span>
+                </button>
+              </div>
+
+              {/* Easter egg — XPR signature, auto-dismisses */}
+              <div
+                className={`pointer-events-none absolute right-3 top-[calc(100%+8px)] z-30 w-56 rounded-lg bg-white px-3 py-2.5 text-[11px] leading-snug text-ink shadow-[0_12px_30px_-8px_rgba(0,0,0,0.35)] ring-1 ring-black/10 transition-all duration-300 ${
+                  egg ? "translate-y-0 opacity-100" : "-translate-y-1 opacity-0"
+                }`}
+              >
+                <span className="font-semibold text-[#000fdd]">XPR</span> — From
+                real-world moments to immersive digital design.
               </div>
             </div>
 
