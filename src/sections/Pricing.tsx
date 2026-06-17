@@ -144,13 +144,13 @@ export default function Pricing() {
           </span>
         </div>
 
-        {/* Plans */}
-        <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+        {/* Plans — horizontal carousel on mobile, grid on desktop */}
+        <div className="mt-12 flex snap-x snap-mandatory gap-5 overflow-x-auto -mx-6 px-6 pb-4 pt-3 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:grid md:grid-cols-2 md:overflow-visible md:px-0 md:pb-0 md:pt-0 lg:grid-cols-4">
           {PLANS.map((plan) => (
             <div
               key={plan.name}
               data-reveal
-              className={`relative flex flex-col rounded-2xl p-6 ${
+              className={`relative flex min-w-[80%] shrink-0 snap-center flex-col rounded-2xl p-6 sm:min-w-[46%] md:min-w-0 md:shrink ${
                 plan.popular ? "grad-border grad-border-clay" : "grad-border"
               }`}
             >

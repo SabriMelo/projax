@@ -325,8 +325,8 @@ export default function ProjectTasksBoard() {
   );
 
   return (
-    <div ref={rootRef} className="w-full lg:ml-auto lg:max-w-[680px]">
-      <div className="overflow-hidden rounded-2xl bg-white shadow-[0_30px_70px_-24px_rgba(0,0,0,0.55)] ring-1 ring-black/5">
+    <div ref={rootRef} className="mx-auto w-full max-w-[420px] sm:max-w-[560px] lg:mx-0 lg:ml-auto lg:max-w-[680px]">
+      <div className="overflow-hidden rounded-2xl bg-white shadow-[0_14px_36px_-18px_rgba(0,0,0,0.5)] ring-1 ring-black/5 sm:shadow-[0_30px_70px_-24px_rgba(0,0,0,0.55)]">
         <div className="flex">
           {/* Slim app rail */}
           <aside className="hidden w-11 flex-col items-center gap-1 bg-[#211d1a] py-3 sm:flex">
@@ -350,8 +350,8 @@ export default function ProjectTasksBoard() {
           {/* Main */}
           <div className="min-w-0 flex-1 bg-[#faf8f4]">
             {/* Top bar */}
-            <div className="flex items-center justify-between border-b border-black/5 bg-white px-4 py-2.5">
-              <span className="text-[13px] font-semibold text-ink">Tarefas do Projeto</span>
+            <div className="flex items-center justify-between border-b border-black/5 bg-white px-3 py-2 sm:px-4 sm:py-2.5">
+              <span className="text-xs font-semibold text-ink sm:text-[13px]">Tarefas do Projeto</span>
               <div className="flex items-center gap-3 text-neutral-400">
                 <Lightbulb size={15} />
                 <span className="relative">
@@ -362,11 +362,11 @@ export default function ProjectTasksBoard() {
             </div>
 
             {/* Project header */}
-            <div className="px-4 pt-3">
+            <div className="px-3 pt-2.5 sm:px-4 sm:pt-3">
               <p className="text-[10px] font-medium uppercase tracking-wide text-neutral-600">PROJ-001</p>
               {/* Decorative app title — a <p>, not a heading, to keep the page's
                   heading order intact */}
-              <p className="font-serif text-lg leading-tight text-ink">Beatriz e João</p>
+              <p className="font-serif text-base leading-tight text-ink sm:text-lg">Beatriz e João</p>
               <p className="text-[11px] text-neutral-600">Studio B2</p>
 
               {/* Tabs */}
@@ -397,12 +397,12 @@ export default function ProjectTasksBoard() {
             </div>
 
             {/* Board */}
-            <div ref={boardRef} className="relative px-3 pb-4 pt-3">
-              <div className="flex gap-2">
+            <div ref={boardRef} className="relative px-2 pb-3 pt-2 sm:px-3 sm:pb-4 sm:pt-3">
+              <div className="flex gap-1.5 sm:gap-2">
                 {COLUMNS.map((col) => {
                   const tone = TONE[col.tone];
                   return (
-                    <div key={col.key} className={`flex min-w-0 flex-1 flex-col rounded-lg p-2 ${tone.col}`}>
+                    <div key={col.key} className={`flex min-w-0 flex-1 flex-col rounded-lg p-1.5 sm:p-2 ${tone.col}`}>
                       <div className="mb-2 flex items-center gap-1.5 px-0.5">
                         <span className={`truncate text-[11px] font-semibold ${tone.head}`}>{col.name}</span>
                         <span
@@ -420,7 +420,7 @@ export default function ProjectTasksBoard() {
                         ref={(el) => {
                           dropRefs.current[col.key] = el;
                         }}
-                        className="relative h-[300px]"
+                        className="relative h-[230px] sm:h-[300px]"
                       />
                     </div>
                   );
@@ -436,14 +436,14 @@ export default function ProjectTasksBoard() {
                       cardRefs.current[t.id] = el;
                     }}
                     style={{ opacity: 0 }}
-                    className="task-card pointer-events-auto absolute left-0 top-0 cursor-grab touch-none select-none overflow-hidden rounded-lg bg-white p-2.5 shadow-sm ring-1 ring-black/5 active:cursor-grabbing"
+                    className="task-card pointer-events-auto absolute left-0 top-0 cursor-grab touch-none select-none overflow-hidden rounded-lg bg-white p-2 shadow-sm ring-1 ring-black/5 active:cursor-grabbing sm:p-2.5"
                   >
                     <div className="flex items-center gap-1.5">
                       <DotsSixVertical size={13} className="shrink-0 text-neutral-300" />
-                      <p className="min-w-0 flex-1 truncate text-[11px] font-semibold leading-tight text-ink">{t.title}</p>
+                      <p className="min-w-0 flex-1 truncate text-[10px] font-semibold leading-tight text-ink sm:text-[11px]">{t.title}</p>
                       <DotsThree size={13} className="shrink-0 text-neutral-400" />
                     </div>
-                    <p className="mt-1.5 truncate pl-[19px] text-[10px] leading-tight text-neutral-500">{t.desc}</p>
+                    <p className="mt-1.5 truncate pl-[19px] text-[9px] leading-tight text-neutral-500 sm:text-[10px]">{t.desc}</p>
                     <div className="mt-2 flex items-center gap-2 pl-[19px]">
                       <span className="rounded bg-clay/10 px-1.5 py-0.5 text-[9px] font-medium text-clay-deep">{t.tag}</span>
                       <span className="flex items-center gap-1 text-[9px] text-neutral-500">

@@ -12,9 +12,10 @@ export default function Nav() {
   const [open, setOpen] = useState(false);
 
   return (
-    <nav className="fixed inset-x-0 top-0 z-50 w-full border-b border-white/10 bg-gradient-to-r from-white/45 to-clay-soft/20 px-6 py-4 backdrop-blur-md md:px-10 lg:px-16">
-      <div className="mx-auto flex max-w-[1800px] items-center justify-between">
-        <a href="#hero" className="flex items-center gap-2 text-ink">
+    <nav className="fixed inset-x-0 top-0 z-50 w-full border-b border-white/10 bg-gradient-to-r from-ink/85 via-[#2a1209]/82 to-ink/85 px-6 py-4 backdrop-blur-md md:px-10 lg:px-16">
+      <div className="mx-auto flex max-w-[1800px] items-center justify-between md:grid md:grid-cols-[1fr_auto_1fr]">
+        {/* Logo — accent colour, prominent */}
+        <a href="#hero" className="flex items-center gap-2 text-clay-soft md:justify-self-start">
           <svg
             viewBox="798 483 760 1250"
             className="h-9 w-auto"
@@ -23,30 +24,32 @@ export default function Nav() {
           >
             <path d="M926.508 485.556C1091.66 485.556 1249.32 540.28 1366.29 649.119C1484.01 758.661 1556.01 918.889 1556.01 1120.35H1430.01C1430.01 1069.8 1424.71 1023.16 1414.89 980.372L1160.41 1120.27H1429.8V1246.27H931.209L926.625 1248.79V1730.46L800.625 1730.46V611.388H926.508V485.556ZM994.331 1067.78L1371.18 860.618C1346.88 814.173 1316.03 774.461 1280.46 741.362C1246.79 710.034 1208.27 684.057 1166.09 663.782L994.331 1067.78ZM926.625 904.992L1046.26 623.596C1007.88 615.639 967.797 611.564 926.625 611.557V904.992Z" />
           </svg>
-          <span className="font-tera text-sm font-light tracking-tight text-ink">
+          <span className="font-tera text-sm font-light tracking-tight text-clay-soft">
             PROJAX
           </span>
         </a>
 
-        {/* Desktop nav */}
-        <div className="hidden items-center gap-8 md:flex">
+        {/* Desktop links — centred, white, a touch heavier */}
+        <div className="hidden items-center gap-8 md:flex md:justify-self-center">
           {links.map((l) => (
             <a
               key={l.href}
               href={l.href}
-              className="text-sm text-neutral-600 transition-colors hover:text-ink"
+              className="text-sm font-medium text-white/85 transition-colors hover:text-white"
             >
               {l.label}
             </a>
           ))}
-          <a
-            href="#precos"
-            className="grad-border grad-border-clay-solid inline-flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-medium text-white transition-transform duration-300 hover:-translate-y-0.5"
-          >
-            Teste grátis
-            <ArrowRight size={15} weight="bold" />
-          </a>
         </div>
+
+        {/* CTA */}
+        <a
+          href="#precos"
+          className="grad-border grad-border-clay-solid hidden items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-medium text-white transition-transform duration-300 hover:-translate-y-0.5 md:inline-flex md:justify-self-end"
+        >
+          Teste grátis
+          <ArrowRight size={15} weight="bold" />
+        </a>
 
         {/* Mobile toggle */}
         <button
@@ -54,7 +57,7 @@ export default function Nav() {
           aria-label={open ? "Fechar menu" : "Abrir menu"}
           aria-expanded={open}
           onClick={() => setOpen((v) => !v)}
-          className="flex h-9 w-9 items-center justify-center rounded-lg text-ink transition-colors hover:bg-black/5 md:hidden"
+          className="flex h-9 w-9 items-center justify-center rounded-lg text-white transition-colors hover:bg-white/10 md:hidden"
         >
           {open ? <X size={20} weight="bold" /> : <List size={20} weight="bold" />}
         </button>
@@ -67,13 +70,13 @@ export default function Nav() {
         }`}
       >
         <div className="min-h-0 overflow-hidden">
-          <div className="mt-4 flex flex-col gap-1 border-t border-black/10 pt-4">
+          <div className="mt-4 flex flex-col gap-1 border-t border-white/10 pt-4">
             {links.map((l) => (
               <a
                 key={l.href}
                 href={l.href}
                 onClick={() => setOpen(false)}
-                className="rounded-lg px-2 py-2.5 text-sm font-medium text-neutral-700 transition-colors hover:bg-black/5 hover:text-ink"
+                className="rounded-lg px-2 py-2.5 text-sm font-medium text-white/85 transition-colors hover:bg-white/10 hover:text-white"
               >
                 {l.label}
               </a>

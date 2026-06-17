@@ -43,7 +43,7 @@ export default function HowItWorks() {
             <div
               key={step.n}
               data-acc-item
-              className="m-acc step-panel group relative grow basis-0 overflow-hidden rounded-2xl bg-[#ece6db] transition-[flex-grow] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] md:h-80 md:hover:grow-[2.4]"
+              className="m-acc step-panel group relative overflow-hidden rounded-2xl bg-[#ece6db] transition-[flex-grow] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] md:h-80 md:grow md:basis-0 md:hover:grow-[2.4]"
             >
               {/* Photo — fades in on hover (desktop) / on open (mobile) */}
               <div

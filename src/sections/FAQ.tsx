@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Plus } from "@phosphor-icons/react";
 
 const FAQS = [
@@ -28,6 +29,9 @@ const FAQS = [
 ];
 
 export default function FAQ() {
+  // Tap-to-open on mobile (where there's no hover); desktop still opens on hover.
+  const [open, setOpen] = useState<Record<number, boolean>>({});
+
   return (
     <section
       id="faq"
@@ -59,19 +63,24 @@ export default function FAQ() {
           </p>
         </div>
 
-        {/* Accordion — opens on hover, pushing the others down */}
+        {/* Accordion — tap to toggle (mobile) or hover (desktop) */}
         <div data-reveal className="divide-y divide-black/10">
-          {FAQS.map((item) => (
-            <div key={item.q} className="group">
-              <div className="flex items-center justify-between gap-4 py-5">
+          {FAQS.map((item, i) => (
+            <div key={item.q} className={`group ${open[i] ? "is-open" : ""}`}>
+              <button
+                type="button"
+                aria-expanded={!!open[i]}
+                onClick={() => setOpen((o) => ({ ...o, [i]: !o[i] }))}
+                className="flex w-full items-center justify-between gap-4 py-5 text-left"
+              >
                 <span className="text-base font-medium text-ink">{item.q}</span>
                 <Plus
                   size={18}
                   weight="bold"
-                  className="shrink-0 text-clay transition-transform duration-300 ease-out group-hover:rotate-45"
+                  className="shrink-0 text-clay transition-transform duration-300 ease-out group-[.is-open]:rotate-45 md:group-hover:rotate-45"
                 />
-              </div>
-              <div className="grid grid-rows-[0fr] transition-[grid-template-rows] duration-500 ease-out group-hover:grid-rows-[1fr]">
+              </button>
+              <div className="grid grid-rows-[0fr] transition-[grid-template-rows] duration-500 ease-out group-[.is-open]:grid-rows-[1fr] md:group-hover:grid-rows-[1fr]">
                 <div className="overflow-hidden">
                   <p className="max-w-xl pb-5 text-base text-neutral-500">
                     {item.a}
