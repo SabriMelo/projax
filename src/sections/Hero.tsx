@@ -103,6 +103,17 @@ export default function Hero() {
       {/* Blueprint lines that form and stay behind the content */}
       <HeroIntro />
 
+      {/* Fade the left-side circle + cross so the copy below the title stays
+          legible (sits above the blueprint, below the content). */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 z-[1] hidden md:block"
+        style={{
+          background:
+            "linear-gradient(to right, rgba(42,18,9,0.9) 0%, rgba(42,18,9,0.55) 26%, rgba(42,18,9,0) 50%)",
+        }}
+      />
+
       {/* Content */}
       <div className="relative z-10 mx-auto grid w-full max-w-[1800px] flex-1 items-center gap-8 px-6 pb-8 pt-28 md:px-10 md:pb-10 md:pt-28 lg:grid-cols-[1fr_1fr] lg:gap-6 lg:px-16">
         {/* Copy + actions */}

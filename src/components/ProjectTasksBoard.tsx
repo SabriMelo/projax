@@ -13,7 +13,6 @@ import {
   UsersThree,
 } from "@phosphor-icons/react";
 import { gsap, useGSAP, Draggable } from "../lib/gsap";
-import { lockScroll, unlockScroll } from "../lib/scroll";
 
 /*
   Hero module — a little simulation of the Projax app, parked on the "Tarefas do
@@ -275,15 +274,11 @@ export default function ProjectTasksBoard() {
             dragResistance: 0.05,
             onPress: function () {
               this.update();
-              // Freeze the page while dragging so the board can't scroll out
-              // from under the pointer (which used to misplace the cards).
-              lockScroll();
               gsap.to(card, { scale: 1.05, boxShadow: "0 18px 30px rgba(0,0,0,0.22)", duration: 0.18 });
               card.style.zIndex = "40";
             },
             onDragEnd: () => drop(t.id),
             onRelease: () => {
-              unlockScroll();
               gsap.to(card, { scale: 1, boxShadow: "0 1px 2px rgba(0,0,0,0.06)", duration: 0.25 });
               card.style.zIndex = "";
             },

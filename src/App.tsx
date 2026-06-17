@@ -3,7 +3,6 @@ import { Route, Routes, useLocation } from "react-router-dom";
 import Lenis from "lenis";
 import "lenis/dist/lenis.css";
 import { gsap, useGSAP, ScrollTrigger } from "./lib/gsap";
-import { setLenis } from "./lib/scroll";
 import Nav from "./components/Nav";
 import Footer from "./components/Footer";
 import Hero from "./sections/Hero";
@@ -45,7 +44,6 @@ export default function App() {
   useEffect(() => {
     const lenis = new Lenis({ anchors: { offset: -80 } });
     lenisRef.current = lenis;
-    setLenis(lenis);
     lenis.on("scroll", ScrollTrigger.update);
     const onTick = (time: number) => lenis.raf(time * 1000);
     gsap.ticker.add(onTick);
@@ -55,7 +53,6 @@ export default function App() {
       gsap.ticker.lagSmoothing(500, 33); // restore GSAP defaults
       lenis.destroy();
       lenisRef.current = null;
-      setLenis(null);
     };
   }, []);
 
