@@ -218,28 +218,33 @@ export default function ProjectTasksBoard() {
       // --- Drag interaction (enabled once the intro settles) ---
       const drags: Draggable[] = [];
 
-      // Re-measure and re-seat every card when the window WIDTH changes, so the
-      // board adapts as it's compressed or expanded. We ignore height-only
-      // changes (mobile address-bar show/hide while scrolling) — those used to
-      // shove the cards around and make them vanish.
+      // Re-measure and re-seat every card whenever the BOARD's width changes —
+      // a ResizeObserver catches every cause (window resize, column reflow, the
+      // lg breakpoint) far more reliably than a window 'resize' listener. We act
+      // only on width changes, so setting dropzone heights here can't loop and
+      // mobile address-bar height shifts are ignored.
       let raf = 0;
-      let lastW = window.innerWidth;
-      const onResize = () => {
-        if (window.innerWidth === lastW) return;
-        lastW = window.innerWidth;
+      let lastW = 0;
+      const relayoutAll = () => {
+        measure();
+        COLUMNS.forEach((c) => {
+          stacks[c.key].forEach((id, i) => {
+            const p = slot(c.key, i);
+            gsap.set(cardRefs.current[id], { width: cardW, height: H, x: p.x, y: p.y });
+          });
+        });
+        drags.forEach((d) => d.update(true));
+      };
+      const ro = new ResizeObserver(() => {
+        const w = board.clientWidth;
+        if (w === lastW) return;
+        lastW = w;
         if (raf) return;
         raf = requestAnimationFrame(() => {
           raf = 0;
-          measure();
-          COLUMNS.forEach((c) => {
-            stacks[c.key].forEach((id, i) => {
-              const p = slot(c.key, i);
-              gsap.set(cardRefs.current[id], { width: cardW, height: H, x: p.x, y: p.y });
-            });
-          });
-          drags.forEach((d) => d.update(true));
+          relayoutAll();
         });
-      };
+      });
 
       const drop = (id: string) => {
         const card = cardRefs.current[id]!;
@@ -285,7 +290,7 @@ export default function ProjectTasksBoard() {
           });
           drags.push(d);
         });
-        window.addEventListener("resize", onResize);
+        ro.observe(board);
       };
 
       const reduce =
@@ -317,7 +322,7 @@ export default function ProjectTasksBoard() {
         enableDrag();
         return () => {
         drags.forEach((d) => d.kill());
-        window.removeEventListener("resize", onResize);
+        ro.disconnect();
         if (raf) cancelAnimationFrame(raf);
       };
       }
@@ -371,7 +376,7 @@ export default function ProjectTasksBoard() {
 
       return () => {
         drags.forEach((d) => d.kill());
-        window.removeEventListener("resize", onResize);
+        ro.disconnect();
         if (raf) cancelAnimationFrame(raf);
       };
     },
@@ -379,7 +384,7 @@ export default function ProjectTasksBoard() {
   );
 
   return (
-    <div ref={rootRef} className="mx-auto w-full max-w-[420px] sm:max-w-[560px] lg:mx-0 lg:ml-auto lg:max-w-[680px]">
+    <div ref={rootRef} className="mx-auto w-full max-w-[420px] sm:max-w-[560px] lg:max-w-none">
       <div className="overflow-hidden rounded-2xl bg-white shadow-[0_14px_36px_-18px_rgba(0,0,0,0.5)] ring-1 ring-black/5 sm:shadow-[0_30px_70px_-24px_rgba(0,0,0,0.55)]">
         <div className="flex">
           {/* Slim app rail */}

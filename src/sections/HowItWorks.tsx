@@ -2,24 +2,31 @@ import { useRef } from "react";
 import SectionHeading from "../components/SectionHeading";
 import { useMobileAccordion } from "../hooks/useMobileAccordion";
 
-const STEPS = [
+const STEPS: {
+  n: string;
+  title: string;
+  body: string;
+  photo: string;
+  zoom?: boolean;
+}[] = [
   {
     n: "01",
     title: "Crie seu projeto",
     body: "Cadastre o cliente, defina as fases e monte o quadro do projeto em minutos.",
-    photo: "/steps/crie-seu-projeto.webp",
+    photo: "/steps/crie.webp",
+    zoom: true,
   },
   {
     n: "02",
     title: "Organize as tarefas",
     body: "Atribua responsáveis, prazos e arraste os cartões conforme o trabalho avança.",
-    photo: "/steps/organize-as-tarefas.webp",
+    photo: "/steps/organize.webp",
   },
   {
     n: "03",
     title: "Acompanhe e entregue",
     body: "Veja horas, progresso e mantenha o cliente informado até a entrega final.",
-    photo: "/steps/acompanhe-e-entregue.webp",
+    photo: "/steps/acompanhe.webp",
   },
 ];
 
@@ -48,7 +55,10 @@ export default function HowItWorks() {
               {/* Photo — fades in on hover (desktop) / on open (mobile) */}
               <div
                 className="step-photo absolute inset-0 bg-cover bg-center opacity-0 transition-opacity duration-500 ease-out group-hover:opacity-100"
-                style={{ backgroundImage: `url(${step.photo})` }}
+                style={{
+                  backgroundImage: `url(${step.photo})`,
+                  ...(step.zoom ? { backgroundSize: "150%" } : {}),
+                }}
               />
               {/* Scrim so the text stays legible once the photo shows */}
               <div className="step-scrim absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
