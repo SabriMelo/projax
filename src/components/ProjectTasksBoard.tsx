@@ -109,23 +109,27 @@ export default function ProjectTasksBoard() {
       const firstDrop = dropRefs.current["pendente"];
       if (!board || !firstDrop) return;
 
-      // --- Measure: card width from a column, card height from its content ---
-      const cardW = firstDrop.getBoundingClientRect().width;
-      TASKS.forEach((t) => {
-        const c = cardRefs.current[t.id];
-        if (c) gsap.set(c, { width: cardW });
-      });
-      const H = cardRefs.current["t1"]!.getBoundingClientRect().height;
+      // --- Measure (re-runnable, so the board adapts when the window resizes) ---
+      let cardW = 0;
+      let H = 0;
+      let bRect = board.getBoundingClientRect();
+      const measure = () => {
+        cardW = firstDrop.getBoundingClientRect().width;
+        TASKS.forEach((t) => {
+          const c = cardRefs.current[t.id];
+          if (c) gsap.set(c, { width: cardW });
+        });
+        H = cardRefs.current["t1"]!.getBoundingClientRect().height;
+        // Size every column's drop zone to hold all four cards stacked.
+        const dropH = 4 * H + 3 * GAP;
+        COLUMNS.forEach((c) => {
+          const d = dropRefs.current[c.key];
+          if (d) gsap.set(d, { height: dropH });
+        });
+        bRect = board.getBoundingClientRect();
+      };
+      measure();
 
-      // Size every column's drop zone to hold all four cards stacked.
-      const dropH = 4 * H + 3 * GAP;
-      COLUMNS.forEach((c) => {
-        const d = dropRefs.current[c.key];
-        if (d) gsap.set(d, { height: dropH });
-      });
-
-      // Slot position is measured live (so it survives the resize above).
-      const bRect = board.getBoundingClientRect();
       const slot = (colKey: string, index: number) => {
         const r = dropRefs.current[colKey]!.getBoundingClientRect();
         return {
@@ -164,6 +168,25 @@ export default function ProjectTasksBoard() {
 
       // --- Drag interaction (enabled once the intro settles) ---
       const drags: Draggable[] = [];
+
+      // Re-measure and re-seat every card when the window resizes, so the board
+      // adapts subtly as it's compressed or expanded.
+      let raf = 0;
+      const onResize = () => {
+        if (raf) return;
+        raf = requestAnimationFrame(() => {
+          raf = 0;
+          measure();
+          COLUMNS.forEach((c) => {
+            stacks[c.key].forEach((id, i) => {
+              const p = slot(c.key, i);
+              gsap.set(cardRefs.current[id], { width: cardW, height: H, x: p.x, y: p.y });
+            });
+          });
+          drags.forEach((d) => d.update(true));
+        });
+      };
+
       const drop = (id: string) => {
         const card = cardRefs.current[id]!;
         const cr = card.getBoundingClientRect();
@@ -208,6 +231,7 @@ export default function ProjectTasksBoard() {
           });
           drags.push(d);
         });
+        window.addEventListener("resize", onResize);
       };
 
       const reduce =
@@ -237,7 +261,11 @@ export default function ProjectTasksBoard() {
         });
         writeCounts();
         enableDrag();
-        return () => drags.forEach((d) => d.kill());
+        return () => {
+        drags.forEach((d) => d.kill());
+        window.removeEventListener("resize", onResize);
+        if (raf) cancelAnimationFrame(raf);
+      };
       }
 
       const tl = gsap.timeline({ defaults: { ease: "power3.out" }, onComplete: enableDrag });
@@ -287,7 +315,11 @@ export default function ProjectTasksBoard() {
         at += 0.55;
       });
 
-      return () => drags.forEach((d) => d.kill());
+      return () => {
+        drags.forEach((d) => d.kill());
+        window.removeEventListener("resize", onResize);
+        if (raf) cancelAnimationFrame(raf);
+      };
     },
     { scope: rootRef },
   );
@@ -331,9 +363,11 @@ export default function ProjectTasksBoard() {
 
             {/* Project header */}
             <div className="px-4 pt-3">
-              <p className="text-[10px] font-medium uppercase tracking-wide text-neutral-400">PROJ-001</p>
-              <h3 className="font-serif text-lg leading-tight text-ink">Beatriz e João</h3>
-              <p className="text-[11px] text-neutral-400">Studio B2</p>
+              <p className="text-[10px] font-medium uppercase tracking-wide text-neutral-500">PROJ-001</p>
+              {/* Decorative app title — a <p>, not a heading, to keep the page's
+                  heading order intact */}
+              <p className="font-serif text-lg leading-tight text-ink">Beatriz e João</p>
+              <p className="text-[11px] text-neutral-500">Studio B2</p>
 
               {/* Tabs */}
               <div className="mt-2.5 flex gap-4 border-b border-black/5 text-[11px]">
@@ -343,7 +377,7 @@ export default function ProjectTasksBoard() {
                     <span
                       key={tab}
                       className={`-mb-px border-b-2 pb-1.5 ${
-                        active ? "border-clay font-medium text-ink" : "border-transparent text-neutral-400"
+                        active ? "border-clay font-medium text-ink" : "border-transparent text-neutral-500"
                       }`}
                     >
                       {tab}
@@ -354,7 +388,7 @@ export default function ProjectTasksBoard() {
 
               {/* Count + new */}
               <div className="mt-3 flex items-center justify-between">
-                <span className="text-[11px] text-neutral-400">4 tarefas</span>
+                <span className="text-[11px] text-neutral-500">4 tarefas</span>
                 <span className="inline-flex items-center gap-1 rounded-lg bg-clay px-2.5 py-1 text-[11px] font-medium text-white">
                   <Plus size={11} weight="bold" />
                   Nova Tarefa
@@ -409,14 +443,14 @@ export default function ProjectTasksBoard() {
                       <p className="min-w-0 flex-1 truncate text-[11px] font-semibold leading-tight text-ink">{t.title}</p>
                       <DotsThree size={13} className="shrink-0 text-neutral-400" />
                     </div>
-                    <p className="mt-1.5 truncate pl-[19px] text-[10px] leading-tight text-neutral-400">{t.desc}</p>
+                    <p className="mt-1.5 truncate pl-[19px] text-[10px] leading-tight text-neutral-500">{t.desc}</p>
                     <div className="mt-2 flex items-center gap-2 pl-[19px]">
-                      <span className="rounded bg-clay/10 px-1.5 py-0.5 text-[9px] font-medium text-clay">{t.tag}</span>
-                      <span className="flex items-center gap-1 text-[9px] text-neutral-400">
+                      <span className="rounded bg-clay/10 px-1.5 py-0.5 text-[9px] font-medium text-clay-deep">{t.tag}</span>
+                      <span className="flex items-center gap-1 text-[9px] text-neutral-500">
                         <CalendarBlank size={10} />
                         {t.date}
                       </span>
-                      <span className="ml-auto flex h-4 w-4 items-center justify-center rounded-full bg-clay/15 text-[7px] font-bold text-clay">
+                      <span className="ml-auto flex h-4 w-4 items-center justify-center rounded-full bg-clay/15 text-[7px] font-bold text-clay-deep">
                         SM
                       </span>
                     </div>

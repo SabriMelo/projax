@@ -28,7 +28,7 @@ export default function AppsMarquee() {
 
   return (
     <section className="bg-white py-10">
-      <p className="mb-7 text-center text-xs font-semibold uppercase tracking-[0.2em] text-neutral-400">
+      <p className="mb-7 text-center text-xs font-semibold uppercase tracking-[0.2em] text-neutral-500">
         As ferramentas que o seu escritório já usa
       </p>
       <div className="relative overflow-hidden" style={FADE}>

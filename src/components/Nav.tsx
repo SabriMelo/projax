@@ -1,4 +1,5 @@
-import { ArrowRight } from "@phosphor-icons/react";
+import { useState } from "react";
+import { ArrowRight, List, X } from "@phosphor-icons/react";
 
 const links = [
   { href: "#recursos", label: "Recursos" },
@@ -8,6 +9,8 @@ const links = [
 ];
 
 export default function Nav() {
+  const [open, setOpen] = useState(false);
+
   return (
     <nav className="fixed inset-x-0 top-0 z-50 w-full border-b border-white/10 bg-gradient-to-r from-white/45 to-clay-soft/20 px-6 py-4 backdrop-blur-md md:px-10 lg:px-16">
       <div className="mx-auto flex max-w-[1800px] items-center justify-between">
@@ -25,6 +28,7 @@ export default function Nav() {
           </span>
         </a>
 
+        {/* Desktop nav */}
         <div className="hidden items-center gap-8 md:flex">
           {links.map((l) => (
             <a
@@ -42,6 +46,47 @@ export default function Nav() {
             Teste grátis
             <ArrowRight size={15} weight="bold" />
           </a>
+        </div>
+
+        {/* Mobile toggle */}
+        <button
+          type="button"
+          aria-label={open ? "Fechar menu" : "Abrir menu"}
+          aria-expanded={open}
+          onClick={() => setOpen((v) => !v)}
+          className="flex h-9 w-9 items-center justify-center rounded-lg text-ink transition-colors hover:bg-black/5 md:hidden"
+        >
+          {open ? <X size={20} weight="bold" /> : <List size={20} weight="bold" />}
+        </button>
+      </div>
+
+      {/* Mobile dropdown */}
+      <div
+        className={`grid overflow-hidden transition-[grid-template-rows] duration-300 ease-out md:hidden ${
+          open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+        }`}
+      >
+        <div className="min-h-0 overflow-hidden">
+          <div className="mt-4 flex flex-col gap-1 border-t border-black/10 pt-4">
+            {links.map((l) => (
+              <a
+                key={l.href}
+                href={l.href}
+                onClick={() => setOpen(false)}
+                className="rounded-lg px-2 py-2.5 text-sm font-medium text-neutral-700 transition-colors hover:bg-black/5 hover:text-ink"
+              >
+                {l.label}
+              </a>
+            ))}
+            <a
+              href="#precos"
+              onClick={() => setOpen(false)}
+              className="grad-border grad-border-clay-solid mt-2 inline-flex items-center justify-center gap-1.5 rounded-lg px-4 py-2.5 text-sm font-medium text-white"
+            >
+              Teste grátis
+              <ArrowRight size={15} weight="bold" />
+            </a>
+          </div>
         </div>
       </div>
     </nav>
