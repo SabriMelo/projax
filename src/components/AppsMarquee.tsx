@@ -22,14 +22,15 @@ const FADE: CSSProperties = {
     "linear-gradient(to right, transparent, #000 7%, #000 93%, transparent)",
 };
 
+// Lives inside the hero now, on the warm dark field.
 export default function AppsMarquee() {
   // Two copies so the -50% shift loops seamlessly
   const items = [...APPS, ...APPS];
 
   return (
-    <section className="bg-white py-10">
-      <p className="mb-7 text-center text-xs font-semibold uppercase tracking-[0.2em] text-neutral-500">
-        As ferramentas que o seu escritório já usa
+    <div className="relative z-10 pb-7 pt-2">
+      <p className="mb-5 text-center text-xs font-semibold uppercase tracking-[0.2em] text-neutral-400">
+        Gestão integrada às ferramentas que o seu escritório já usa
       </p>
       <div className="relative overflow-hidden" style={FADE}>
         <div className="animate-marquee flex w-max">
@@ -38,9 +39,9 @@ export default function AppsMarquee() {
             return (
               <div
                 key={i}
-                className="mr-12 flex shrink-0 items-center gap-2 text-neutral-500"
+                className="mr-12 flex shrink-0 items-center gap-2 text-neutral-300"
               >
-                <Glyph size={22} weight="duotone" className="text-clay/70" />
+                <Glyph size={22} weight="duotone" className="text-clay-soft" />
                 <span className="whitespace-nowrap text-lg font-medium tracking-tight">
                   {app.name}
                 </span>
@@ -49,6 +50,6 @@ export default function AppsMarquee() {
           })}
         </div>
       </div>
-    </section>
+    </div>
   );
 }

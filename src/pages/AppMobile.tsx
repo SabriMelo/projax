@@ -32,7 +32,7 @@ export default function AppMobile() {
     <PageShell
       eyebrow="Produto"
       title="App Mobile"
-      lead="Acompanhe projetos, registre horas e veja o andamento da obra de qualquer lugar — direto do seu celular."
+      lead="Acompanhe projetos, registre horas e veja o andamento da obra de qualquer lugar, direto do seu celular."
     >
       {/* Store placeholders */}
       <div className="flex flex-col items-center gap-4">
@@ -50,7 +50,7 @@ export default function AppMobile() {
           Registre o diário de obra com fotos e anotações direto do canteiro.
         </InfoCard>
         <InfoCard title="Horas em qualquer lugar">
-          Inicie e pause o cronômetro pelo celular — tudo sincroniza com a web.
+          Inicie e pause o cronômetro pelo celular, e tudo sincroniza com a web.
         </InfoCard>
         <InfoCard title="Cliente sempre informado">
           Veja o progresso e responda o cliente sem precisar abrir o notebook.

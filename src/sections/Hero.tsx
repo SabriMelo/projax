@@ -3,6 +3,7 @@ import { ArrowRight } from "@phosphor-icons/react";
 import { gsap, useGSAP } from "../lib/gsap";
 import ProjectTasksBoard from "../components/ProjectTasksBoard";
 import HeroIntro from "../components/HeroIntro";
+import AppsMarquee from "../components/AppsMarquee";
 
 export default function Hero() {
   const heroRef = useRef<HTMLElement>(null);
@@ -56,7 +57,7 @@ export default function Hero() {
     <section
       ref={heroRef}
       id="hero"
-      className="relative isolate w-full overflow-hidden"
+      className="relative isolate flex min-h-[100svh] w-full flex-col overflow-hidden"
     >
       {/* Background — only on the hero: a deep warm field so the white blueprint
           reads, with a soft optical flare glowing from the bottom. */}
@@ -103,7 +104,7 @@ export default function Hero() {
       <HeroIntro />
 
       {/* Content */}
-      <div className="relative z-10 mx-auto grid min-h-[100svh] max-w-[1800px] items-center gap-8 px-6 pb-16 pt-28 md:px-10 md:pb-24 md:pt-28 lg:grid-cols-[1fr_1fr] lg:gap-6 lg:px-16">
+      <div className="relative z-10 mx-auto grid w-full max-w-[1800px] flex-1 items-center gap-8 px-6 pb-8 pt-28 md:px-10 md:pb-10 md:pt-28 lg:grid-cols-[1fr_1fr] lg:gap-6 lg:px-16">
         {/* Copy + actions */}
         <div>
           <p className="hero-rv mb-4 text-xs font-semibold uppercase tracking-[0.22em] text-clay-soft">
@@ -115,7 +116,9 @@ export default function Hero() {
             do briefing à entrega.
           </h1>
           <p className="hero-rv mb-8 max-w-md text-pretty text-lg text-neutral-300">
-            Projetos, obras, financeiro e equipe em um só lugar.
+            <span className="relative isolate inline-block before:absolute before:-inset-x-3 before:-inset-y-1 before:-z-10 before:rounded-2xl before:bg-clay/30 before:blur-2xl">
+              Projetos, obras, financeiro e equipe em um só lugar.
+            </span>
             <br />
             O Projax cuida da gestão do escritório para você focar no que
             importa: projetar.
@@ -144,9 +147,12 @@ export default function Hero() {
           </p>
         </div>
 
-        {/* Simulated Projax app — tasks leap into "Concluído", once */}
+        {/* Simulated Projax app: tasks leap into "Concluído", once */}
         <ProjectTasksBoard />
       </div>
+
+      {/* Integration marquee — lives inside the hero, on the warm field */}
+      <AppsMarquee />
     </section>
   );
 }

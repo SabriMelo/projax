@@ -13,6 +13,7 @@ import {
   UsersThree,
 } from "@phosphor-icons/react";
 import { gsap, useGSAP, Draggable } from "../lib/gsap";
+import { lockScroll, unlockScroll } from "../lib/scroll";
 
 /*
   Hero module — a little simulation of the Projax app, parked on the "Tarefas do
@@ -74,7 +75,7 @@ type Task = {
 const TASKS: Task[] = [
   { id: "t1", title: "Detalhar marcenaria", desc: "Cozinha e closet", tag: "Final", date: "06/08", start: "revisao", s: 0 },
   { id: "t2", title: "Render da sala", desc: "Ajustar iluminação", tag: "3D", date: "07/08", start: "andamento", s: 0 },
-  { id: "t3", title: "Planta — Pav. 1", desc: "Revisar cotas e layout", tag: "CAD", date: "08/08", start: "pendente", s: 0 },
+  { id: "t3", title: "Planta · Pav. 1", desc: "Revisar cotas e layout", tag: "CAD", date: "08/08", start: "pendente", s: 0 },
   { id: "t4", title: "Memorial descritivo", desc: "Acabamentos finais", tag: "Doc", date: "09/08", start: "pendente", s: 1 },
 ];
 
@@ -157,7 +158,6 @@ export default function ProjectTasksBoard() {
       // --- Measure (re-runnable, so the board adapts when the window resizes) ---
       let cardW = 0;
       let H = 0;
-      let bRect = board.getBoundingClientRect();
       const measure = () => {
         // offsetWidth/Height are layout sizes (ignore any transient drag scale)
         cardW = firstDrop.offsetWidth;
@@ -172,15 +172,19 @@ export default function ProjectTasksBoard() {
           const d = dropRefs.current[c.key];
           if (d) gsap.set(d, { height: dropH });
         });
-        bRect = board.getBoundingClientRect();
       };
       measure();
 
+      // Read BOTH rects live, at the same instant, so the dropzone's offset
+      // within the board is scroll-independent. (A board rect cached at one
+      // scroll position, compared with a live dropzone rect after scrolling,
+      // was shoving the cards up and off-screen.)
       const slot = (colKey: string, index: number) => {
+        const b = board.getBoundingClientRect();
         const r = dropRefs.current[colKey]!.getBoundingClientRect();
         return {
-          x: r.left - bRect.left,
-          y: r.top - bRect.top + index * (H + GAP),
+          x: r.left - b.left,
+          y: r.top - b.top + index * (H + GAP),
         };
       };
 
@@ -271,11 +275,15 @@ export default function ProjectTasksBoard() {
             dragResistance: 0.05,
             onPress: function () {
               this.update();
+              // Freeze the page while dragging so the board can't scroll out
+              // from under the pointer (which used to misplace the cards).
+              lockScroll();
               gsap.to(card, { scale: 1.05, boxShadow: "0 18px 30px rgba(0,0,0,0.22)", duration: 0.18 });
               card.style.zIndex = "40";
             },
             onDragEnd: () => drop(t.id),
             onRelease: () => {
+              unlockScroll();
               gsap.to(card, { scale: 1, boxShadow: "0 1px 2px rgba(0,0,0,0.06)", duration: 0.25 });
               card.style.zIndex = "";
             },
@@ -423,7 +431,7 @@ export default function ProjectTasksBoard() {
                   egg ? "translate-y-0 opacity-100" : "-translate-y-1 opacity-0"
                 }`}
               >
-                <span className="font-semibold text-[#000fdd]">XPR</span> — From
+                <span className="font-semibold text-[#000fdd]">XPR</span> · From
                 real-world moments to immersive digital design.
               </div>
             </div>
@@ -433,8 +441,8 @@ export default function ProjectTasksBoard() {
               <p className="text-[10px] font-medium uppercase tracking-wide text-neutral-600">PROJ-001</p>
               {/* Decorative app title — a <p>, not a heading, to keep the page's
                   heading order intact */}
-              <p className="font-serif text-base leading-tight text-ink sm:text-lg">Beatriz e João</p>
-              <p className="text-[11px] text-neutral-600">Studio B2</p>
+              <p className="font-serif text-base leading-tight text-ink sm:text-lg">Helena e Rafael</p>
+              <p className="text-[11px] text-neutral-600">Atelier Norte</p>
 
               {/* Tabs */}
               <div className="mt-2.5 flex gap-4 border-b border-black/5 text-[11px]">

@@ -4,7 +4,7 @@ import { Plus } from "@phosphor-icons/react";
 const FAQS = [
   {
     q: "O timer do desktop conta as horas sozinho?",
-    a: "Sim. O app de desktop cronometra o tempo em cada projeto automaticamente e sincroniza com a web — você não precisa lembrar de iniciar nada.",
+    a: "Sim. O app de desktop cronometra o tempo em cada projeto automaticamente e sincroniza com a web. Você não precisa lembrar de iniciar nada.",
   },
   {
     q: "Preciso instalar algo para usar?",
@@ -12,7 +12,7 @@ const FAQS = [
   },
   {
     q: "Posso trocar de plano depois?",
-    a: "A qualquer momento. Faça upgrade ou downgrade quando quiser — o valor é ajustado de forma proporcional.",
+    a: "A qualquer momento. Faça upgrade ou downgrade quando quiser. O valor é ajustado de forma proporcional.",
   },
   {
     q: "Como funciona o controle de rentabilidade?",
@@ -20,7 +20,7 @@ const FAQS = [
   },
   {
     q: "Meus dados ficam seguros?",
-    a: "Sim. Os dados são criptografados, com backups automáticos, e cada escritório tem o seu ambiente isolado — inclusive a IA, que nunca usa informações de outro escritório.",
+    a: "Sim. Os dados são criptografados, com backups automáticos, e cada escritório tem o seu ambiente isolado, inclusive a IA, que nunca usa informações de outro escritório.",
   },
   {
     q: "O Projax segue a LGPD?",

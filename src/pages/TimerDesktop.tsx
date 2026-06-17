@@ -5,7 +5,7 @@ export default function TimerDesktop() {
     <PageShell
       eyebrow="Produto"
       title="Timer Desktop"
-      lead="Um cronômetro discreto que roda na sua barra de tarefas e registra as horas em cada projeto automaticamente — depois é só faturar."
+      lead="Um cronômetro discreto que roda na sua barra de tarefas e registra as horas em cada projeto automaticamente. Depois é só faturar."
     >
       <div className="grid gap-5 md:grid-cols-3">
         <InfoCard title="Cronometragem automática">

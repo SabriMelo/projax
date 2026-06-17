@@ -17,7 +17,7 @@ export default function Seguranca() {
           trabalho.
         </InfoCard>
         <InfoCard title="Ambiente isolado">
-          Cada escritório roda em um ambiente separado — inclusive a IA, que
+          Cada escritório roda em um ambiente separado, inclusive a IA, que
           nunca usa dados de outro cliente.
         </InfoCard>
         <InfoCard title="Conformidade com a LGPD">

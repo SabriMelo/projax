@@ -57,7 +57,7 @@ export default function Footer() {
             </Link>
             <p className="mt-4 max-w-xs text-sm text-neutral-600">
               O ERP que organiza projetos e horas para escritórios de
-              arquitetura — na web, no desktop e no celular.
+              arquitetura: na web, no desktop e no celular.
             </p>
           </div>
 
