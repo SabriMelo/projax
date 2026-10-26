@@ -4,6 +4,8 @@ Landing page do Projax, ERP de gestão para escritórios de arquitetura.
 Construída com **Vite + React + TypeScript**, **Tailwind CSS v4** e animações em
 **GSAP** (ScrollTrigger, Flip, Draggable) com scroll suave via **Lenis**.
 
+> O sistema do Projax é privado e está em fase de testes com usuários. Este repositório contém apenas a landing page, que está no ar em [projax.com.br](https://projax.com.br).
+
 ## Requisitos
 
 - Node.js 20+
